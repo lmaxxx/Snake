@@ -9,11 +9,29 @@
 </head>
 <body>
     <div class="preparation">
-        <div class="preparation__darkness"></div>
         <div class="preparation__content">
-            <h1>Hello</h1>
+            <h1 class="preparation__title">Snake game</h1>
+            <h2 class="preparation__heading">Game mode</h2>
+            <div class="preparation__modes">
+                <p class="preparation__mode">Easy</p>
+                <p class="preparation__mode preparation__mode-active">Normal</p>
+                <p class="preparation__mode">Hard</p>
+            </div>
+            <h2 class="preparation__heading">Playground size</h2>
+            <div class="preparation__sizes">
+                <p class="preparation__size">7x7</p>
+                <p class="preparation__size preparation__size-active">10x10</p>
+                <p class="preparation__size">15x15</p>
+            </div>
+            <button class="preparation__button">Start</button>
         </div>
     </div>
+    <div class="playground__wrapper">
+        <div class="playground">
+            <!-- will render by js -->
+        </div>
+    </div>
+
     <script src="./src/app.js"></script>
 </body>
 </html>

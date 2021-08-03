@@ -11,35 +11,184 @@ body {
   margin: 0;
   font-family: 'Georama', sans-serif;
   overflow: hidden;
-  color: #fff;
-}
-
-.preparation {
   width: 100%;
   height: 100vh;
   background: url("https://wallpaperaccess.com/full/254499.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative;
-  display: grid;
-  place-items: center;
 }
 
-.preparation__darkness {
-  background: rgba(0, 0, 0 ,0.9);
+.preparation {
+  display: grid;
+  place-items: center;
+  background-color: #fff;
+  background: rgba(0, 0, 0 ,0.85);
+  width: 100%;
+  height: 100vh;
   position: absolute;
   top: 0;
-  bottom: 0;
-  right: 0;
   left: 0;
-  z-index: 5;
+  transition: 0.5s;
 }
 
 .preparation__content {
   position: relative;
   z-index: 10;
-  background-color: red;
   max-width: 700px;
   width: 85%;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.preparation__title {
+  color: #fff;
+  text-align: center;
+  font-size: 3.5em;
+  font-weight: 500;
+}
+
+.preparation__heading {
+  color: #fff;
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: 500;
+  margin-bottom: 0.6em;
+  margin-top: 0.9em;
+}
+
+.preparation__modes {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.preparation__mode {
+  color: #fff;
+  padding: 12px 32px;
+  font-size: 2em;
+  transition: 0.3s;
+  border: 3px solid rgba(0, 0, 0 ,0);
+  cursor: pointer;
+}
+
+.preparation__mode:hover {
+  color: #54f531;
+}
+
+.preparation__mode-active {
+  border: 3px solid #54f531;
+  transition: 0.3s;
+  color: #54f531;
+}
+
+.preparation__sizes {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.preparation__size {
+  color: #fff;
+  padding: 12px 32px;
+  font-size: 2em;
+  transition: 0.3s;
+  border: 3px solid rgba(0, 0, 0 ,0);
+  cursor: pointer;
+}
+
+.preparation__size:hover {
+  color: #0b24fb;
+}
+
+.preparation__size-active {
+  border: 3px solid #0b24fb;
+  transition: 0.3s;
+  color: #0b24fb;
+}
+
+.preparation__button {
+  border: 3px solid #fff;
+  transition: 0.3s;
+  color: #fff;
+  background: 0;
+  font-size: 2em;
+  padding: 10px 42px;
+  margin-top: 2em;
+  font-weight: 500;
+}
+
+.preparation__button:hover {
+  color: #000;
+  background: #fff;
+}
+
+.preparation__button:focus {
+  outline: none;
+  color: #000;
+  background: #fff;
+}
+
+.playground {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 3px;
+}
+
+.playground__wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0 ,0.85);
+  top: 100vh;
+  left: 0;
+  transition: 0.5s;
+  display: grid;
+  place-items: center;
+}
+
+.playground__area {
+  background: #2b2a33;
+  height: 50px;
+  width: 50px;
+}
+
+.playground__area-small {
+  height: 35px;
+  width: 35px;
+}
+
+
+.playground__food{
+  background-color: #f4db3f;
+  overflow: hidden;
+  clip-path: polygon(
+    0 10%,
+    10% 0,
+    90% 0,
+    100% 10%,
+    100% 90%,
+    90% 100%,
+    10% 100%,
+    0% 90%,
+    0% 10%
+  )
+}
+
+.playground__snake {
+  background-color: #2e6fe0;
+  overflow: hidden;
+  clip-path: polygon(
+    0 10%,
+    10% 0,
+    90% 0,
+    100% 10%,
+    100% 90%,
+    90% 100%,
+    10% 100%,
+    0% 90%,
+    0% 10%
+  )
 }
