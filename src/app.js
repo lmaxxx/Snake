@@ -67,13 +67,33 @@ class Game {
   size = null
   score = 0
   playgroundEl = document.querySelector(".playground")
+  keyCodeStatuses = {
+    W: 87,
+    D: 68,
+    S: 83,
+    A: 65,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    LEFT: 37,
+  }
 
-  update() {}
+  update() {
+    snake.move()
+    snake.checkFood()
+  }
 
   start() {
     preparation.endPreparation()
     preparation.slideToPlayground()
+
     this.renderPlayground()
+    snake.setStartPosition(this.size)
+    snake.firstSnakeRender()
+    this.addKeyboardEvent()
+
+    this.chooseSpeed()
+    this.spawnFood()
   }
 
   getRandomNumber(min, max) {
@@ -89,7 +109,7 @@ class Game {
       case "small":
         row = this.getRandomNumber(1, 7)
         column = this.getRandomNumber(1, 7)
-        area = document.getElementById(`${column}_${row}`)
+        area = document.getElementById(`${row}_${column}`)
 
         if(area.classList.contains("playground__snake")) {
           this.getRandomFreeArea()
@@ -98,7 +118,7 @@ class Game {
       case "medium":
         row = this.getRandomNumber(1, 10)
         column = this.getRandomNumber(1, 10)
-        area = document.getElementById(`${column}_${row}`)
+        area = document.getElementById(`${row}_${column}`)
 
         if(area.classList.contains("playground__snake")) {
           this.getRandomFreeArea()
@@ -107,7 +127,7 @@ class Game {
       case "big":
         row = this.getRandomNumber(1, 15)
         column = this.getRandomNumber(1, 15)
-        area = document.getElementById(`${column}_${row}`)
+        area = document.getElementById(`${row}_${column}`)
 
         if(area.classList.contains("playground__snake")) {
           this.getRandomFreeArea()
@@ -127,14 +147,14 @@ class Game {
 
         for(let i = 0, row = 0, column = 0; i < 7 * 7; i++) {
           const area = document.createElement("div")
-          if(row === 7 && i > 0) {
-            column++
-            row = 0
+          if(column === 7 && i > 0) {
+            row++
+            column = 0
           }
           area.innerHTML = `<div id="${`${column + 1}_${row + 1}`}" class="playground__area"></div>`
 
           this.playgroundEl.append(area)
-          row++
+          column++
         }
         break
 
@@ -143,14 +163,14 @@ class Game {
 
         for(let i = 0, row = 0, column = 0; i < 10 * 10; i++) {
           const area = document.createElement("div")
-          if(row === 10 && i > 0) {
-            column++
-            row = 0
+          if(column === 10 && i > 0) {
+            row++
+            column = 0
           }
           area.innerHTML = `<div id="${`${column + 1}_${row + 1}`}" class="playground__area"></div>`
 
           this.playgroundEl.append(area)
-          row++
+          column++
         }
         break
 
@@ -159,15 +179,54 @@ class Game {
 
         for(let i = 0, row = 0, column = 0; i < 15 * 15; i++) {
           const area = document.createElement("div")
-          if(row === 15 && i > 0) {
-            column++
-            row = 0
+          if(column === 15 && i > 0) {
+            row++
+            column = 0
           }
           area.innerHTML = `<div id="${`${column + 1}_${row + 1}`}" class="playground__area playground__area-small"></div>`
 
           this.playgroundEl.append(area)
-          row++
+          column++
         }
+        break
+    }
+  }
+
+  addKeyboardEvent() {
+    document.addEventListener('keydown', (e) => {
+      const keyCode = e.keyCode
+
+      if(keyCode === this.keyCodeStatuses.DOWN || 
+        keyCode === this.keyCodeStatuses.S) {
+        snake.activeDirection = snake.directionStatuses.down
+      }
+      else if(keyCode === this.keyCodeStatuses.UP ||
+        keyCode === this.keyCodeStatuses.W) {
+        snake.activeDirection = snake.directionStatuses.up
+      }
+      else if(keyCode === this.keyCodeStatuses.RIGHT || 
+        keyCode === this.keyCodeStatuses.D) {
+        snake.activeDirection = snake.directionStatuses.right
+      }
+      else if(keyCode === this.keyCodeStatuses.LEFT ||
+        keyCode === this.keyCodeStatuses.A) {
+        snake.activeDirection = snake.directionStatuses.left
+      }
+    })
+  }
+
+  chooseSpeed() {
+    switch(this.mode) {
+      case 'easy':
+        setInterval(() => this.update(), 550)
+        break
+
+      case 'normal':
+        setInterval(() => this.update(), 350)
+        break
+
+      case 'hard': 
+      setInterval(() => this.update(), 150)
         break
     }
   }
@@ -176,8 +235,108 @@ class Game {
 const game = new Game()
 
 class Snake {
-  position = [[],[],[]]
+  position = []
+  directionStatuses = {up: 0, right: 1, down: 2, left: 3}
+  activeDirection = this.directionStatuses.down
+
+  firstSnakeRender() {
+    for(const areaСoordinates of this.position) {
+      const [row, column] = areaСoordinates
+      const futureSnakeArea = document.getElementById(`${row}_${column}`)
+
+      futureSnakeArea.classList.add('playground__snake')
+    }
+  }
+
+  setStartPosition(size) {
+    switch(size) {
+      case "small":
+        this.position = [[4, 3], [4, 2], [4, 1]]
+        break
+
+      case "medium":
+        this.position = [[5, 3], [5, 2], [5, 1]]
+        break
+
+      case "big":
+        this.position = [[8, 3], [8, 2], [8, 1]]
+        break
+    }
+  }
+
+  move() {
+    switch(this.activeDirection) {
+      case this.directionStatuses.up:
+        this.goUp()
+        break
+
+      case this.directionStatuses.right:
+        this.goRight()
+        break
+
+      case this.directionStatuses.down:
+        this.goDown()
+        break
+
+      case this.directionStatuses.left:
+        this.goLeft()
+        break
+    }
+  }
+
+  goUp() {
+    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow - 1}`)
+    this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow - 1])
+    nextSnakeArea.classList.add("playground__snake")
+
+    this.removeLastSnakeArea()
+  }
+
+  goRight() {
+    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn + 1}_${firstSnakeAreaRow}`)
+    this.position.unshift([firstSnakeAreaColumn + 1, firstSnakeAreaRow])
+    nextSnakeArea.classList.add("playground__snake")
+
+    this.removeLastSnakeArea()
+  }
+
+  goDown() {
+    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow + 1}`)
+    this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow + 1])
+    nextSnakeArea.classList.add("playground__snake")
+
+    this.removeLastSnakeArea()
+  }
+
+  goLeft() {
+    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn - 1}_${firstSnakeAreaRow}`)
+    this.position.unshift([firstSnakeAreaColumn - 1, firstSnakeAreaRow])
+    nextSnakeArea.classList.add("playground__snake")
+
+    this.removeLastSnakeArea()
+  }  
+
+  removeLastSnakeArea() {
+    const [lastSnakeAreaColumn, lastSnakeAreaRow] = this.position[this.position.length - 1]
+    const lastSnakeArea = document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow}`)
+
+    lastSnakeArea.classList.remove("playground__snake")
+    this.position.pop()
+  }
+
+  checkFood() {
+    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+    const fisrtSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow}`)
+
+    if(fisrtSnakeArea.classList.contains("playground__food")) game.spawnFood()
+  }
 }
+
+const snake = new Snake()
 
 //add click event on the option buttons
 
