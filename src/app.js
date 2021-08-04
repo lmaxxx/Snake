@@ -333,9 +333,10 @@ class Snake {
     const fisrtSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow}`)
 
     if(fisrtSnakeArea.classList.contains("playground__food")) {
+      
       this.eatFood()
       this.addSnakeArea()
-
+      
       game.spawnFood()
     } 
   }
@@ -350,9 +351,6 @@ class Snake {
     const [lastSnakeAreaColumn, lastSnakeAreaRow] = this.position[this.position.length - 1]
     const [penultimateColumn, penultimateRow] = this.position[this.position.length - 2]
 
-    // document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow}`).classList.add("playground__snake")
-    // this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow])
-
     if(lastSnakeAreaColumn > penultimateColumn) {
       document.getElementById(`${lastSnakeAreaColumn + 1}_${lastSnakeAreaRow}`).classList.add("playground__snake")
       this.position.push([lastSnakeAreaColumn + 1 , lastSnakeAreaRow])
@@ -362,12 +360,12 @@ class Snake {
       this.position.push([lastSnakeAreaColumn - 1, lastSnakeAreaRow])
     }
     else if(lastSnakeAreaRow > penultimateRow) {
-      document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow - 1}`).classList.add("playground__snake")
-      this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow - 1])
-    }
-    else if(lastSnakeAreaRow < penultimateRow) {
       document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow + 1}`).classList.add("playground__snake")
       this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow + 1])
+    }
+    else if(lastSnakeAreaRow < penultimateRow) {
+      document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow - 1}`).classList.add("playground__snake")
+      this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow - 1])
     }
   }
 }
