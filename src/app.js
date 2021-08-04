@@ -97,42 +97,18 @@ class Game {
   }
 
   getRandomNumber(min, max) {
-    return Math.floor(Math.random() * max) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min
   }
 
   getRandomFreeArea() {
-    let row
-    let column
-    let area
+    const allAreas = document.querySelectorAll(".playground__area")
+    const freeAreas = []
 
-    switch(this.size) {
-      case "small":
-        row = this.getRandomNumber(1, 7)
-        column = this.getRandomNumber(1, 7)
-        area = document.getElementById(`${row}_${column}`)
-
-        if(area.classList.contains("playground__snake")) {
-          this.getRandomFreeArea()
-        } else return area
-
-      case "medium":
-        row = this.getRandomNumber(1, 10)
-        column = this.getRandomNumber(1, 10)
-        area = document.getElementById(`${row}_${column}`)
-
-        if(area.classList.contains("playground__snake")) {
-          this.getRandomFreeArea()
-        } else return area
-
-      case "big":
-        row = this.getRandomNumber(1, 15)
-        column = this.getRandomNumber(1, 15)
-        area = document.getElementById(`${row}_${column}`)
-
-        if(area.classList.contains("playground__snake")) {
-          this.getRandomFreeArea()
-        } else return area
+    for(const area of allAreas) {
+      if(!area.classList.contains("playground__snake")) freeAreas.push(area)
     }
+
+    return freeAreas[this.getRandomNumber(0, freeAreas.length - 1)]
   }
 
   spawnFood() {
@@ -384,32 +360,3 @@ preparation.sizes.forEach((mode, index) => {
 
 preparation.startButtonEl.addEventListener('click', () => game.start(preparation.size, preparation.mode))
 
-
-
-// const [lastSnakeAreaColumn, lastSnakeAreaRow] = this.position[this.position.length - 1]
-
-// switch(this.activeDirection) {
-//   case this.directionStatuses.up:
-//     document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow - 1}`).classList.add("playground__snake")
-//     this.position.push([lastSnakeAreaColumn , lastSnakeAreaRow - 1])
-
-//     break
-
-//   case this.directionStatuses.right:
-//     document.getElementById(`${lastSnakeAreaColumn - 1}_${lastSnakeAreaRow}`).classList.add("playground__snake")
-//     this.position.push([lastSnakeAreaColumn  - 1, lastSnakeAreaRow])
-
-//     break
-
-//   case this.directionStatuses.down:
-//     document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow + 1}`).classList.add("playground__snake")
-//     this.position.push([lastSnakeAreaColumn , lastSnakeAreaRow + 1])
-
-//     break
-
-//   case this.directionStatuses.right:
-//     document.getElementById(`${lastSnakeAreaColumn + 1}_${lastSnakeAreaRow}`).classList.add("playground__snake")
-//     this.position.push([lastSnakeAreaColumn  + 1, lastSnakeAreaRow])
-
-//     break
-// }
