@@ -3,6 +3,7 @@ class Preparation {
   size = 'medium'
   modes = document.querySelectorAll(".preparation__mode")
   sizes = document.querySelectorAll(".preparation__size")
+  recordEl = document.querySelector(".preparation__record")
   startButtonEl = document.querySelector(".preparation__button")
   modeStatuses = {easy: 0, normal: 1, hard: 2}
   sizeStatuses = {small: 0, medium: 1, big: 2}
@@ -98,7 +99,33 @@ class Game {
   }
 
   end() {
-    alert("You lose")
+    this.setRecordToLocalStorage() 
+    location.reload()
+  }
+
+  setRecordToLocalStorage() {
+    if(this.score > this.getRecordFromLoaclStorage()) {
+      const encryptRecord = this.b64EncodeUnicode(this.score + "")
+      localStorage.setItem('record', encryptRecord)
+    }
+  }
+
+  getRecordFromLoaclStorage() {
+    const encryptRecord = localStorage.getItem('record')
+    return encryptRecord ? +this.b64DecodeUnicode(encryptRecord) : false
+  }
+
+  b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1)
+    }))
+  }
+
+  b64DecodeUnicode(str) {
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
   }
 
   getRandomNumber(min, max) {
@@ -385,4 +412,10 @@ preparation.sizes.forEach((mode, index) => {
 })
 
 preparation.startButtonEl.addEventListener('click', () => game.start(preparation.size, preparation.mode))
+
+// render record 
+
+if(game.getRecordFromLoaclStorage()) {
+  preparation.recordEl.innerHTML = `Record: ${game.getRecordFromLoaclStorage()}`
+}
 

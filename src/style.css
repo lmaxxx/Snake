@@ -218,3 +218,9 @@ body {
   text-align: center;
   width: 100%
 }
+
+.preparation__record {
+  color: #fff;
+  font-size: 1.5em;
+  margin-top: 20px;
+}
