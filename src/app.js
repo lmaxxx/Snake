@@ -172,20 +172,20 @@ class Game {
     document.addEventListener('keydown', (e) => {
       const keyCode = e.keyCode
 
-      if(keyCode === this.keyCodeStatuses.DOWN || 
-        keyCode === this.keyCodeStatuses.S) {
+      if((keyCode === this.keyCodeStatuses.DOWN || 
+        keyCode === this.keyCodeStatuses.S) && snake.activeDirection !== snake.directionStatuses.up) {
         snake.activeDirection = snake.directionStatuses.down
       }
-      else if(keyCode === this.keyCodeStatuses.UP ||
-        keyCode === this.keyCodeStatuses.W) {
+      else if((keyCode === this.keyCodeStatuses.UP ||
+        keyCode === this.keyCodeStatuses.W) && snake.activeDirection !== snake.directionStatuses.down) {
         snake.activeDirection = snake.directionStatuses.up
       }
-      else if(keyCode === this.keyCodeStatuses.RIGHT || 
-        keyCode === this.keyCodeStatuses.D) {
+      else if((keyCode === this.keyCodeStatuses.RIGHT || 
+        keyCode === this.keyCodeStatuses.D) && snake.activeDirection !== snake.directionStatuses.left) {
         snake.activeDirection = snake.directionStatuses.right
       }
-      else if(keyCode === this.keyCodeStatuses.LEFT ||
-        keyCode === this.keyCodeStatuses.A) {
+      else if((keyCode === this.keyCodeStatuses.LEFT ||
+        keyCode === this.keyCodeStatuses.A) && snake.activeDirection !== snake.directionStatuses.right) {
         snake.activeDirection = snake.directionStatuses.left
       }
     })
@@ -214,6 +214,7 @@ class Snake {
   position = []
   directionStatuses = {up: 0, right: 1, down: 2, left: 3}
   activeDirection = this.directionStatuses.down
+  lastRemovedArea = []
 
   firstSnakeRender() {
     for(const areaСoordinates of this.position) {
@@ -301,6 +302,7 @@ class Snake {
     const lastSnakeArea = document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow}`)
 
     lastSnakeArea.classList.remove("playground__snake")
+    this.lastRemovedArea = [lastSnakeAreaColumn, lastSnakeAreaRow]
     this.position.pop()
   }
 
@@ -309,10 +311,10 @@ class Snake {
     const fisrtSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow}`)
 
     if(fisrtSnakeArea.classList.contains("playground__food")) {
-      
       this.eatFood()
       this.addSnakeArea()
       
+      game.score += 1
       game.spawnFood()
     } 
   }
@@ -324,25 +326,10 @@ class Snake {
   }
 
   addSnakeArea() {
-    const [lastSnakeAreaColumn, lastSnakeAreaRow] = this.position[this.position.length - 1]
-    const [penultimateColumn, penultimateRow] = this.position[this.position.length - 2]
+    const [lastRemovedAreaColumn, lastRemovedAreaRow] = this.lastRemovedArea
 
-    if(lastSnakeAreaColumn > penultimateColumn) {
-      document.getElementById(`${lastSnakeAreaColumn + 1}_${lastSnakeAreaRow}`).classList.add("playground__snake")
-      this.position.push([lastSnakeAreaColumn + 1 , lastSnakeAreaRow])
-    }
-    else if(lastSnakeAreaColumn < penultimateColumn) {
-      document.getElementById(`${lastSnakeAreaColumn - 1}_${lastSnakeAreaRow}`).classList.add("playground__snake")
-      this.position.push([lastSnakeAreaColumn - 1, lastSnakeAreaRow])
-    }
-    else if(lastSnakeAreaRow > penultimateRow) {
-      document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow + 1}`).classList.add("playground__snake")
-      this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow + 1])
-    }
-    else if(lastSnakeAreaRow < penultimateRow) {
-      document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow - 1}`).classList.add("playground__snake")
-      this.position.push([lastSnakeAreaColumn, lastSnakeAreaRow - 1])
-    }
+    document.getElementById(`${lastRemovedAreaColumn}_${lastRemovedAreaRow}`).classList.add("playground__snake")
+    this.position.push([lastRemovedAreaColumn, lastRemovedAreaRow])
   }
 }
 
