@@ -81,6 +81,7 @@ class Game {
   update() {
     snake.move()
     snake.checkFood()
+    snake.checkEatSelf()
   }
 
   start() {
@@ -94,6 +95,10 @@ class Game {
 
     this.chooseSpeed()
     this.spawnFood()
+  }
+
+  end() {
+    alert("You lose")
   }
 
   getRandomNumber(min, max) {
@@ -194,7 +199,7 @@ class Game {
   chooseSpeed() {
     switch(this.mode) {
       case 'easy':
-        setInterval(() => this.update(), 550)
+        setInterval(() => this.update(), 1050)
         break
 
       case 'normal':
@@ -205,6 +210,12 @@ class Game {
       setInterval(() => this.update(), 150)
         break
     }
+  }
+
+  addScore() {
+    this.score += 1
+
+    document.querySelector(".playground__score").innerHTML = `Score: ${this.score}`
   }
 }
 
@@ -262,39 +273,58 @@ class Snake {
   }
 
   goUp() {
-    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow - 1}`)
-    this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow - 1])
-    nextSnakeArea.classList.add("playground__snake")
+    try {
+      this.removeLastSnakeArea()
 
-    this.removeLastSnakeArea()
+      const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow - 1}`)
+      this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow - 1])
+      nextSnakeArea.classList.add("playground__snake")
+    } catch(err) {
+      game.end()
+    }
+
   }
 
   goRight() {
-    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn + 1}_${firstSnakeAreaRow}`)
-    this.position.unshift([firstSnakeAreaColumn + 1, firstSnakeAreaRow])
-    nextSnakeArea.classList.add("playground__snake")
+    try {
+      this.removeLastSnakeArea()
 
-    this.removeLastSnakeArea()
+      const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn + 1}_${firstSnakeAreaRow}`)
+      this.position.unshift([firstSnakeAreaColumn + 1, firstSnakeAreaRow])
+      nextSnakeArea.classList.add("playground__snake")
+    } catch(err) {
+      game.end()
+    }
   }
 
   goDown() {
-    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow + 1}`)
-    this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow + 1])
-    nextSnakeArea.classList.add("playground__snake")
+    try {
+      this.removeLastSnakeArea()
 
-    this.removeLastSnakeArea()
+      const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow + 1}`)
+      this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow + 1])
+      nextSnakeArea.classList.add("playground__snake")
+    } catch(err) {
+      game.end()
+    }
+
   }
 
   goLeft() {
-    const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-    const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn - 1}_${firstSnakeAreaRow}`)
-    this.position.unshift([firstSnakeAreaColumn - 1, firstSnakeAreaRow])
-    nextSnakeArea.classList.add("playground__snake")
+    try {
+      this.removeLastSnakeArea()
 
-    this.removeLastSnakeArea()
+      const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
+      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn - 1}_${firstSnakeAreaRow}`)
+      this.position.unshift([firstSnakeAreaColumn - 1, firstSnakeAreaRow])
+      nextSnakeArea.classList.add("playground__snake")
+    } catch(err) {
+      game.end()
+    } 
+
   }  
 
   removeLastSnakeArea() {
@@ -314,7 +344,7 @@ class Snake {
       this.eatFood()
       this.addSnakeArea()
       
-      game.score += 1
+      game.addScore()
       game.spawnFood()
     } 
   }
@@ -330,6 +360,15 @@ class Snake {
 
     document.getElementById(`${lastRemovedAreaColumn}_${lastRemovedAreaRow}`).classList.add("playground__snake")
     this.position.push([lastRemovedAreaColumn, lastRemovedAreaRow])
+  }
+
+  checkEatSelf() {
+    const [headAreaColumn, headAreaRow] = this.position[0]
+    const areasWithoutHead = this.position.slice(1)
+
+    for(const [column, row] of areasWithoutHead) {
+      if(column === headAreaColumn && row === headAreaRow) game.end()
+    }
   }
 }
 
