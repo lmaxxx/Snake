@@ -46,17 +46,17 @@ body {
 .preparation__title {
   color: #fff;
   text-align: center;
-  font-size: 3.5em;
+  font-size: 3em;
   font-weight: 500;
 }
 
 .preparation__heading {
   color: #fff;
   text-align: center;
-  font-size: 2.5em;
+  font-size: 2em;
   font-weight: 500;
   margin-bottom: 0.6em;
-  margin-top: 0.9em;
+  margin-top: 0.7em;
 }
 
 .preparation__modes {
@@ -68,7 +68,7 @@ body {
 .preparation__mode {
   color: #fff;
   padding: 12px 32px;
-  font-size: 2em;
+  font-size: 1.7em;
   transition: 0.3s;
   border: 3px solid rgba(0, 0, 0 ,0);
   cursor: pointer;
@@ -93,7 +93,7 @@ body {
 .preparation__size {
   color: #fff;
   padding: 12px 32px;
-  font-size: 2em;
+  font-size: 1.7em;
   transition: 0.3s;
   border: 3px solid rgba(0, 0, 0 ,0);
   cursor: pointer;
@@ -109,6 +109,52 @@ body {
   color: #0b24fb;
 }
 
+.preparation__checkbox-wrapper {
+  margin-top: 1.2em;
+  position: relative;
+}
+
+.preparation__label {
+  color: #fff;
+  margin-right: 10px;
+  font-size: 1.8em;
+  cursor: pointer;
+}
+
+.preparation__label::before {
+  content: "";
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  border: 2px solid #cf8c43;
+  bottom: 5px;
+  right: -30px;
+}
+
+.preparation__label::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 17px;
+  border-right: 3px solid #cf8c43;
+  border-bottom: 3px solid #cf8c43;
+  transform: rotate(45deg);
+  bottom: 11px;
+  right: -22px;
+  display: none;
+}
+
+.preparation__checkbox{
+  width: 0;
+  height: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.preparation__checkbox:checked ~ .preparation__label::after {
+  display: block;
+}
+
 .preparation__button {
   border: 3px solid #fff;
   transition: 0.3s;
@@ -116,8 +162,9 @@ body {
   background: 0;
   font-size: 2em;
   padding: 10px 42px;
-  margin-top: 2em;
+  margin-top: 1em;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .preparation__button:hover {

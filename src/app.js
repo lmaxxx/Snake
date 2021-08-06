@@ -1,10 +1,12 @@
 class Preparation {
   mode = 'normal'
   size = 'medium'
+  wallTeleport = false
   modes = document.querySelectorAll(".preparation__mode")
   sizes = document.querySelectorAll(".preparation__size")
   recordEl = document.querySelector(".preparation__record")
   startButtonEl = document.querySelector(".preparation__button")
+  wallTeleportEl = document.querySelector(".preparation__checkbox")
   modeStatuses = {easy: 0, normal: 1, hard: 2}
   sizeStatuses = {small: 0, medium: 1, big: 2}
 
@@ -58,6 +60,7 @@ class Preparation {
   endPreparation() {
     game.mode = this.mode
     game.size = this.size
+    game.wallTeleport = this.wallTeleport
   }
 }
 
@@ -66,6 +69,7 @@ const preparation = new Preparation()
 class Game {
   mode = null
   size = null
+  wallTeleport = null
   score = 0
   playgroundEl = document.querySelector(".playground")
   keyCodeStatuses = {
@@ -236,7 +240,7 @@ class Game {
   chooseSpeed() {
     switch(this.mode) {
       case 'easy':
-        setInterval(() => this.update(), 1050)
+        setInterval(() => this.update(), 550)
         break
 
       case 'normal':
@@ -317,13 +321,32 @@ class Snake {
       this.removeLastSnakeArea()
 
       const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow - 1}`)
-      this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow - 1])
+      let nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow - 1}`)
+      let playgrounColumnsAndRows 
+
+      switch(game.size) {
+        case 'small':
+          playgrounColumnsAndRows = 7
+          break
+        case 'medium':
+          playgrounColumnsAndRows = 10
+          break
+        case "big":
+          playgrounColumnsAndRows = 15
+          break
+      }
+
+      if(game.wallTeleport && nextSnakeArea === null) {
+        nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${playgrounColumnsAndRows}`)
+        this.position.unshift([firstSnakeAreaColumn, playgrounColumnsAndRows])
+      } else { 
+        this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow - 1])
+      }
+
       nextSnakeArea.classList.add("playground__snake")
     } catch(err) {
       game.end()
     }
-
   }
 
   goRight() {
@@ -331,8 +354,15 @@ class Snake {
       this.removeLastSnakeArea()
 
       const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn + 1}_${firstSnakeAreaRow}`)
-      this.position.unshift([firstSnakeAreaColumn + 1, firstSnakeAreaRow])
+      let nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn + 1}_${firstSnakeAreaRow}`)
+
+      if(game.wallTeleport && nextSnakeArea === null) {
+        nextSnakeArea = document.getElementById(`${1}_${firstSnakeAreaRow}`)
+        this.position.unshift([1, firstSnakeAreaRow])
+      } else { 
+        this.position.unshift([firstSnakeAreaColumn + 1, firstSnakeAreaRow])
+      }
+              
       nextSnakeArea.classList.add("playground__snake")
     } catch(err) {
       game.end()
@@ -344,8 +374,15 @@ class Snake {
       this.removeLastSnakeArea()
 
       const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow + 1}`)
-      this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow + 1])
+      let nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${firstSnakeAreaRow + 1}`)
+
+      if(game.wallTeleport && nextSnakeArea === null) {
+        nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn}_${1}`)
+        this.position.unshift([firstSnakeAreaColumn, 1])
+      } else { 
+        this.position.unshift([firstSnakeAreaColumn, firstSnakeAreaRow + 1])
+      }
+
       nextSnakeArea.classList.add("playground__snake")
     } catch(err) {
       game.end()
@@ -358,8 +395,28 @@ class Snake {
       this.removeLastSnakeArea()
 
       const [firstSnakeAreaColumn, firstSnakeAreaRow] = this.position[0]
-      const nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn - 1}_${firstSnakeAreaRow}`)
-      this.position.unshift([firstSnakeAreaColumn - 1, firstSnakeAreaRow])
+      let nextSnakeArea = document.getElementById(`${firstSnakeAreaColumn - 1}_${firstSnakeAreaRow}`)
+      let playgrounColumnsAndRows 
+
+      switch(game.size) {
+        case 'small':
+          playgrounColumnsAndRows = 7
+          break
+        case 'medium':
+          playgrounColumnsAndRows = 10
+          break
+        case "big":
+          playgrounColumnsAndRows = 15
+          break
+      }
+
+      if(game.wallTeleport && nextSnakeArea === null) {
+        nextSnakeArea = document.getElementById(`${playgrounColumnsAndRows}_${firstSnakeAreaRow}`)
+        this.position.unshift([playgrounColumnsAndRows, firstSnakeAreaRow])
+      } else { 
+        this.position.unshift([firstSnakeAreaColumn - 1, firstSnakeAreaRow])
+      }
+
       nextSnakeArea.classList.add("playground__snake")
     } catch(err) {
       game.end()
@@ -422,6 +479,16 @@ preparation.modes.forEach((mode, index) => {
 
 preparation.sizes.forEach((mode, index) => {
   mode.addEventListener('click', () => preparation.chooseSize(index))
+})
+
+preparation.wallTeleportEl.checked ? 
+  preparation.wallTeleport = true:
+  preparation.wallTeleport = false
+
+preparation.wallTeleportEl.addEventListener('click', () => {
+  preparation.wallTeleportEl.checked ? 
+  preparation.wallTeleport = true:
+  preparation.wallTeleport = false
 })
 
 preparation.startButtonEl.addEventListener('click', () => game.start(preparation.size, preparation.mode))
