@@ -82,6 +82,10 @@ class Game {
     DOWN: 40,
     LEFT: 37,
   }
+  touchstartX = 0;
+  touchendX = 0;
+  touchstartY = 0;
+  touchendY = 0;
 
   update() {
     snake.move()
@@ -97,6 +101,7 @@ class Game {
     snake.setStartPosition(this.size)
     snake.firstSnakeRender()
     this.addKeyboardEvent()
+    this.addSwipeEvent()
 
     this.chooseSpeed()
     this.spawnFood()
@@ -237,6 +242,20 @@ class Game {
     })
   }
 
+  addSwipeEvent() {
+    document.addEventListener('touchstart', e => {
+      this.touchstartX = e.changedTouches[0].screenX;
+      this.touchstartY = e.changedTouches[0].screenY;
+    })
+
+    document.addEventListener('touchend', e => {
+      this.touchendX = e.changedTouches[0].screenX;
+      this.touchendY = e.changedTouches[0].screenY;
+
+      this.guessDirectionBySwipe()
+    })
+  }
+
   chooseSpeed() {
     switch(this.mode) {
       case 'easy':
@@ -257,6 +276,17 @@ class Game {
     this.score += 1
 
     document.querySelector(".playground__score").innerHTML = `Score: ${this.score}`
+  }
+
+  guessDirectionBySwipe() {
+    if(Math.abs(this.touchendX - this.touchstartX) > Math.abs(this.touchendY - this.touchstartY)) {
+      if (this.touchendX < this.touchstartX) snake.activeDirection =  snake.directionStatuses.left
+      if (this.touchendX > this.touchstartX) snake.activeDirection =  snake.directionStatuses.right
+    }
+    else if(Math.abs(this.touchendX - this.touchstartX) < Math.abs(this.touchendY - this.touchstartY)) {
+      if (this.touchendY < this.touchstartY) snake.activeDirection =  snake.directionStatuses.up
+      if (this.touchendY > this.touchstartY) snake.activeDirection =  snake.directionStatuses.down
+    }
   }
 }
 
@@ -482,8 +512,8 @@ preparation.sizes.forEach((mode, index) => {
 })
 
 preparation.wallTeleportEl.checked ? 
-  preparation.wallTeleport = true:
-  preparation.wallTeleport = false
+preparation.wallTeleport = true:
+preparation.wallTeleport = false
 
 preparation.wallTeleportEl.addEventListener('click', () => {
   preparation.wallTeleportEl.checked ? 
@@ -498,4 +528,3 @@ preparation.startButtonEl.addEventListener('click', () => game.start(preparation
 if(game.getRecordFromLoaclStorage()) {
   preparation.recordEl.innerHTML = `Record: ${game.getRecordFromLoaclStorage()}`
 }
-
