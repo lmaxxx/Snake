@@ -204,21 +204,31 @@ class Game {
     document.addEventListener('keydown', (e) => {
       const keyCode = e.keyCode
 
-      if((keyCode === this.keyCodeStatuses.DOWN || 
-        keyCode === this.keyCodeStatuses.S) && snake.activeDirection !== snake.directionStatuses.up) {
-        snake.activeDirection = snake.directionStatuses.down
-      }
-      else if((keyCode === this.keyCodeStatuses.UP ||
-        keyCode === this.keyCodeStatuses.W) && snake.activeDirection !== snake.directionStatuses.down) {
-        snake.activeDirection = snake.directionStatuses.up
-      }
-      else if((keyCode === this.keyCodeStatuses.RIGHT || 
-        keyCode === this.keyCodeStatuses.D) && snake.activeDirection !== snake.directionStatuses.left) {
-        snake.activeDirection = snake.directionStatuses.right
-      }
-      else if((keyCode === this.keyCodeStatuses.LEFT ||
-        keyCode === this.keyCodeStatuses.A) && snake.activeDirection !== snake.directionStatuses.right) {
-        snake.activeDirection = snake.directionStatuses.left
+      if(snake.possibilityToChangeDirection) {
+        if((keyCode === this.keyCodeStatuses.DOWN || 
+          keyCode === this.keyCodeStatuses.S) && snake.activeDirection !== snake.directionStatuses.up) {
+          snake.activeDirection = snake.directionStatuses.down
+
+          snake.possibilityToChangeDirection = false
+        }
+        else if((keyCode === this.keyCodeStatuses.UP ||
+          keyCode === this.keyCodeStatuses.W) && snake.activeDirection !== snake.directionStatuses.down) {
+          snake.activeDirection = snake.directionStatuses.up
+
+          snake.possibilityToChangeDirection = false
+        }
+        else if((keyCode === this.keyCodeStatuses.RIGHT || 
+          keyCode === this.keyCodeStatuses.D) && snake.activeDirection !== snake.directionStatuses.left) {
+          snake.activeDirection = snake.directionStatuses.right
+
+          snake.possibilityToChangeDirection = false
+        }
+        else if((keyCode === this.keyCodeStatuses.LEFT ||
+          keyCode === this.keyCodeStatuses.A) && snake.activeDirection !== snake.directionStatuses.right) {
+          snake.activeDirection = snake.directionStatuses.left
+
+          snake.possibilityToChangeDirection = false
+        }
       }
     })
   }
@@ -253,6 +263,7 @@ class Snake {
   directionStatuses = {up: 0, right: 1, down: 2, left: 3}
   activeDirection = this.directionStatuses.down
   lastRemovedArea = []
+  possibilityToChangeDirection = true
 
   firstSnakeRender() {
     for(const areaСoordinates of this.position) {
@@ -280,6 +291,8 @@ class Snake {
   }
 
   move() {
+      this.possibilityToChangeDirection = true
+
     switch(this.activeDirection) {
       case this.directionStatuses.up:
         this.goUp()
