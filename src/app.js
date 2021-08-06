@@ -279,13 +279,24 @@ class Game {
   }
 
   guessDirectionBySwipe() {
+    
     if(Math.abs(this.touchendX - this.touchstartX) > Math.abs(this.touchendY - this.touchstartY)) {
-      if (this.touchendX < this.touchstartX) snake.activeDirection =  snake.directionStatuses.left
-      if (this.touchendX > this.touchstartX) snake.activeDirection =  snake.directionStatuses.right
-    }
-    else if(Math.abs(this.touchendX - this.touchstartX) < Math.abs(this.touchendY - this.touchstartY)) {
-      if (this.touchendY < this.touchstartY) snake.activeDirection =  snake.directionStatuses.up
-      if (this.touchendY > this.touchstartY) snake.activeDirection =  snake.directionStatuses.down
+      if (this.touchendX < this.touchstartX) {
+        snake.activeDirection =  snake.directionStatuses.left
+        snake.possibilityToChangeDirection = false
+      } else {
+        snake.activeDirection =  snake.directionStatuses.right
+        snake.possibilityToChangeDirection = false
+      }
+  
+    } else {
+      if (this.touchendY < this.touchstartY) {
+        snake.activeDirection =  snake.directionStatuses.up
+        snake.possibilityToChangeDirection = false
+      } else {
+        snake.activeDirection =  snake.directionStatuses.down
+        snake.possibilityToChangeDirection = false
+      }
     }
   }
 }

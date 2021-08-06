@@ -308,3 +308,15 @@ body {
     font-size: 1em;
   }
 }
+
+@media (max-width: 440px) {
+  .playground__area {
+    width: 25px;
+    height: 25px;
+  }
+
+  .playground__area-small {
+    width: 17px;
+    height: 17px;
+  }
+}
