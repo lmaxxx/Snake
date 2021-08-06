@@ -281,19 +281,19 @@ class Game {
   guessDirectionBySwipe() {
     
     if(Math.abs(this.touchendX - this.touchstartX) > Math.abs(this.touchendY - this.touchstartY)) {
-      if (this.touchendX < this.touchstartX) {
+      if (this.touchendX < this.touchstartX && snake.activeDirection !== snake.directionStatuses.right) {
         snake.activeDirection =  snake.directionStatuses.left
         snake.possibilityToChangeDirection = false
-      } else {
+      } else if (this.touchendX > this.touchstartX && snake.activeDirection !== snake.directionStatuses.left) {
         snake.activeDirection =  snake.directionStatuses.right
         snake.possibilityToChangeDirection = false
       }
   
     } else {
-      if (this.touchendY < this.touchstartY) {
+      if (this.touchendY < this.touchstartY && snake.activeDirection !== snake.directionStatuses.down) {
         snake.activeDirection =  snake.directionStatuses.up
         snake.possibilityToChangeDirection = false
-      } else {
+      } else if (this.touchendY > this.touchstartY && snake.activeDirection !== snake.directionStatuses.up) {
         snake.activeDirection =  snake.directionStatuses.down
         snake.possibilityToChangeDirection = false
       }
