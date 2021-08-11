@@ -27,7 +27,6 @@ class Preparation {
       case this.modeStatuses.hard:
         this.mode = 'hard'
         this.modes[mode].classList.add("preparation__mode-active")
-        break
     }
   }
 
@@ -48,7 +47,6 @@ class Preparation {
       case this.sizeStatuses.big:
         this.size = 'big'
         this.sizes[size].classList.add("preparation__size-active")
-        break
     }
   }
 
@@ -205,7 +203,6 @@ class Game {
           this.playgroundEl.append(area)
           column++
         }
-        break
     }
   }
 
@@ -268,7 +265,6 @@ class Game {
 
       case 'hard': 
       setInterval(() => this.update(), 150)
-        break
     }
   }
 
@@ -331,7 +327,6 @@ class Snake {
 
       case "big":
         this.position = [[8, 3], [8, 2], [8, 1]]
-        break
     }
   }
 
@@ -353,7 +348,6 @@ class Snake {
 
       case this.directionStatuses.left:
         this.goLeft()
-        break
     }
   }
 
@@ -374,7 +368,6 @@ class Snake {
           break
         case "big":
           playgrounColumnsAndRows = 15
-          break
       }
 
       if(game.wallTeleport && nextSnakeArea === null) {
@@ -448,7 +441,6 @@ class Snake {
           break
         case "big":
           playgrounColumnsAndRows = 15
-          break
       }
 
       if(game.wallTeleport && nextSnakeArea === null) {
@@ -465,7 +457,7 @@ class Snake {
 
   }  
 
-  removeLastSnakeArea() {
+  removeLastSnakeArea() { 
     const [lastSnakeAreaColumn, lastSnakeAreaRow] = this.position[this.position.length - 1]
     const lastSnakeArea = document.getElementById(`${lastSnakeAreaColumn}_${lastSnakeAreaRow}`)
 
